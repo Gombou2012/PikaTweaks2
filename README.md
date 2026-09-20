@@ -1,17 +1,17 @@
-# PikaTweaks
+# PIKATWEAKS2
 
-A GitHub-ready Windows tweaking application inspired by the layout of modern PC optimizer apps, built around the real **PikaTweaks V10.2** tweak library.
+A GitHub-ready Windows tweaking application inspired by the layout of modern PC optimizer apps, built around the real **PIKATWEAKS2 V10.2** tweak library.
 
 ## What is included
 
-- 75 source-derived V10.2 library actions from the supplied `PikaTweaks-V10.2.bat`.
+- 75 source-derived V10.2 library actions from the supplied `PIKATWEAKS2-V10.2.bat`.
 - Native WPF desktop UI.
 - Purple/dark dashboard layout.
 - Search and categories.
 - Apply Selected / Apply Recommended / Apply All Tweaks.
 - Administrator manifest for system-wide changes.
 - Hidden command execution through temporary `.cmd` files, so multi-command batch syntax is preserved without opening a visible Command Prompt.
-- Activity logging under `%ProgramData%\PikaTweaks\pikatweaks.log`.
+- Activity logging under `%ProgramData%\PIKATWEAKS2\pikatweaks.log`.
 
 ## Important behavior
 
@@ -31,12 +31,12 @@ dotnet build -c Release -p:Platform=x64
 Publish a standalone EXE:
 
 ```powershell
-dotnet publish src/PikaTweaks/PikaTweaks.csproj -c Release -r win-x64 --self-contained true -p:PublishSingleFile=true -p:IncludeNativeLibrariesForSelfExtract=true
+dotnet publish src/PIKATWEAKS2/PIKATWEAKS2.csproj -c Release -r win-x64 --self-contained true -p:PublishSingleFile=true -p:IncludeNativeLibrariesForSelfExtract=true
 ```
 
 Output is under:
 
-`src/PikaTweaks/bin/Release/net8.0-windows/win-x64/publish/`
+`src/PIKATWEAKS2/bin/Release/net8.0-windows/win-x64/publish/`
 
 ## GitHub Actions
 

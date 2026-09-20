@@ -1,16 +1,16 @@
 from pathlib import Path
 import textwrap, json
-root=Path('/mnt/data/PikaTweaks-GitHub')
+root=Path('/mnt/data/PIKATWEAKS2-GitHub')
 
 def w(p,s):
     p=root/p; p.parent.mkdir(parents=True,exist_ok=True); p.write_text(textwrap.dedent(s).lstrip(),encoding='utf-8')
 
-w('PikaTweaks.sln', '''
+w('PIKATWEAKS2.sln', '''
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.0.31903.59
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{60DC8134-BAA2-4D58-BAE4-1054B4B0D2D6}") = "PikaTweaks", "src\\PikaTweaks\\PikaTweaks.csproj", "{8E1B6E8D-6D54-4E3E-9E4A-2F5B3B6A1D11}"
+Project("{60DC8134-BAA2-4D58-BAE4-1054B4B0D2D6}") = "PIKATWEAKS2", "src\\PIKATWEAKS2\\PIKATWEAKS2.csproj", "{8E1B6E8D-6D54-4E3E-9E4A-2F5B3B6A1D11}"
 EndProject
 Global
     GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -26,7 +26,7 @@ Global
 EndGlobal
 ''')
 
-w('src/PikaTweaks/PikaTweaks.csproj', '''
+w('src/PIKATWEAKS2/PIKATWEAKS2.csproj', '''
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
@@ -34,15 +34,15 @@ w('src/PikaTweaks/PikaTweaks.csproj', '''
     <UseWPF>true</UseWPF>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
-    <AssemblyName>PikaTweaks</AssemblyName>
-    <RootNamespace>PikaTweaks</RootNamespace>
+    <AssemblyName>PIKATWEAKS2</AssemblyName>
+    <RootNamespace>PIKATWEAKS2</RootNamespace>
     <ApplicationManifest>app.manifest</ApplicationManifest>
     <Platforms>x64</Platforms>
   </PropertyGroup>
 </Project>
 ''')
 
-w('src/PikaTweaks/app.manifest', '''
+w('src/PIKATWEAKS2/app.manifest', '''
 <?xml version="1.0" encoding="utf-8"?>
 <assembly manifestVersion="1.0" xmlns="urn:schemas-microsoft-com:asm.v1">
   <trustInfo xmlns="urn:schemas-microsoft-com:asm.v3">
@@ -60,8 +60,8 @@ w('src/PikaTweaks/app.manifest', '''
 </assembly>
 ''')
 
-w('src/PikaTweaks/App.xaml', '''
-<Application x:Class="PikaTweaks.App" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+w('src/PIKATWEAKS2/App.xaml', '''
+<Application x:Class="PIKATWEAKS2.App" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
   <Application.Resources>
     <SolidColorBrush x:Key="Bg" Color="#0E0B14"/>
     <SolidColorBrush x:Key="Panel" Color="#17121F"/>
@@ -97,14 +97,14 @@ w('src/PikaTweaks/App.xaml', '''
 </Application>
 ''')
 
-w('src/PikaTweaks/App.xaml.cs', '''
+w('src/PIKATWEAKS2/App.xaml.cs', '''
 using System.Windows;
-namespace PikaTweaks;
+namespace PIKATWEAKS2;
 public partial class App : Application { }
 ''')
 
-w('src/PikaTweaks/Models/Tweak.cs', '''
-namespace PikaTweaks.Models;
+w('src/PIKATWEAKS2/Models/Tweak.cs', '''
+namespace PIKATWEAKS2.Models;
 public enum TweakRisk { Low, Medium, High }
 public sealed class Tweak
 {
@@ -207,18 +207,18 @@ for i,name,cat,desc,script in items:
     rec='true' if i in safe_ids else 'false'
     lines.append(f'''new Tweak {{ Id="v10-{i:02}", Name="{name.replace('"','\\"')}", Category="{cat}", Description="{desc.replace('"','\\"')}", Risk=TweakRisk.{risk}, Recommended={rec}, Script=@"{script.replace('"','""')}" }}''')
 
-w('src/PikaTweaks/Services/TweakCatalog.cs', 'namespace PikaTweaks.Services;\nusing PikaTweaks.Models;\n\npublic static class TweakCatalog\n{\n    public static IReadOnlyList<Tweak> All { get; } = new List<Tweak>\n    {\n        ' + ',\n        '.join(lines) + '\n    };\n}\n')
+w('src/PIKATWEAKS2/Services/TweakCatalog.cs', 'namespace PIKATWEAKS2.Services;\nusing PIKATWEAKS2.Models;\n\npublic static class TweakCatalog\n{\n    public static IReadOnlyList<Tweak> All { get; } = new List<Tweak>\n    {\n        ' + ',\n        '.join(lines) + '\n    };\n}\n')
 
-w('src/PikaTweaks/Services/CommandRunner.cs', '''
+w('src/PIKATWEAKS2/Services/CommandRunner.cs', '''
 using System.Diagnostics;
 using System.Text;
-namespace PikaTweaks.Services;
+namespace PIKATWEAKS2.Services;
 public sealed record CommandResult(int ExitCode, string Output);
 public sealed class CommandRunner
 {
     public async Task<CommandResult> RunScriptAsync(string script, CancellationToken token = default)
     {
-        var dir = Path.Combine(Path.GetTempPath(), "PikaTweaks");
+        var dir = Path.Combine(Path.GetTempPath(), "PIKATWEAKS2");
         Directory.CreateDirectory(dir);
         var path = Path.Combine(dir, $"tweak-{Guid.NewGuid():N}.cmd");
         await File.WriteAllTextAsync(path, "@echo off\r\nsetlocal\r\n" + script + "\r\n", new UTF8Encoding(false), token);
@@ -248,12 +248,12 @@ public sealed class CommandRunner
 }
 ''')
 
-w('src/PikaTweaks/Services/BackupService.cs', '''
+w('src/PIKATWEAKS2/Services/BackupService.cs', '''
 using Microsoft.Win32;
-namespace PikaTweaks.Services;
+namespace PIKATWEAKS2.Services;
 public sealed class BackupService
 {
-    public string Root { get; } = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData), "PikaTweaks", "Backups");
+    public string Root { get; } = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData), "PIKATWEAKS2", "Backups");
     public BackupService() => Directory.CreateDirectory(Root);
     public string CreateSessionBackup(IEnumerable<string> registryRoots)
     {
@@ -268,7 +268,7 @@ public sealed class BackupService
                 var (hive, sub) = root.StartsWith("HKCU", StringComparison.OrdinalIgnoreCase) ? ("HKCU", root[5..]) : ("HKLM", root[5..]);
                 using var key = (hive == "HKCU" ? Registry.CurrentUser : Registry.LocalMachine).OpenSubKey(sub);
                 if (key == null) continue;
-                File.WriteAllText(file, "; PikaTweaks backup\n; Registry path: " + root + "\n");
+                File.WriteAllText(file, "; PIKATWEAKS2 backup\n; Registry path: " + root + "\n");
             }
             catch { }
         }
@@ -277,18 +277,18 @@ public sealed class BackupService
 }
 ''')
 
-w('src/PikaTweaks/Services/LogService.cs', '''
-namespace PikaTweaks.Services;
+w('src/PIKATWEAKS2/Services/LogService.cs', '''
+namespace PIKATWEAKS2.Services;
 public sealed class LogService
 {
-    public string FilePath { get; } = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData), "PikaTweaks", "pikatweaks.log");
+    public string FilePath { get; } = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData), "PIKATWEAKS2", "pikatweaks.log");
     public LogService() => Directory.CreateDirectory(Path.GetDirectoryName(FilePath)!);
     public void Write(string message) => File.AppendAllText(FilePath, $"[{DateTime.Now:yyyy-MM-dd HH:mm:ss}] {message}{Environment.NewLine}");
 }
 ''')
 
-w('src/PikaTweaks/MainWindow.xaml', '''
-<Window x:Class="PikaTweaks.MainWindow" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" Title="PikaTweaks" Width="1280" Height="800" MinWidth="1000" MinHeight="650" Background="{StaticResource Bg}" Foreground="{StaticResource Text}" WindowStartupLocation="CenterScreen">
+w('src/PIKATWEAKS2/MainWindow.xaml', '''
+<Window x:Class="PIKATWEAKS2.MainWindow" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" Title="PIKATWEAKS2" Width="1280" Height="800" MinWidth="1000" MinHeight="650" Background="{StaticResource Bg}" Foreground="{StaticResource Text}" WindowStartupLocation="CenterScreen">
 <Grid>
   <Grid.ColumnDefinitions><ColumnDefinition Width="220"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions>
   <Border Grid.Column="0" Background="#120E18" BorderBrush="{StaticResource Border}" BorderThickness="0,0,1,0">
@@ -340,14 +340,14 @@ w('src/PikaTweaks/MainWindow.xaml', '''
 </Window>
 ''')
 
-w('src/PikaTweaks/MainWindow.xaml.cs', '''
+w('src/PIKATWEAKS2/MainWindow.xaml.cs', '''
 using System.Collections.ObjectModel;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
-using PikaTweaks.Models;
-using PikaTweaks.Services;
-namespace PikaTweaks;
+using PIKATWEAKS2.Models;
+using PIKATWEAKS2.Services;
+namespace PIKATWEAKS2;
 public partial class MainWindow : Window
 {
     readonly CommandRunner runner = new();
@@ -369,7 +369,7 @@ public partial class MainWindow : Window
     async void ApplyRecommended_Click(object s,RoutedEventArgs e){ await ApplyAsync(TweakCatalog.All.Where(t=>t.Recommended)); }
     async void ApplyAll_Click(object s,RoutedEventArgs e)
     {
-        var answer=MessageBox.Show("Apply all 75 source-derived V10.2 tweaks? Diagnostic-only items are included only where they change system state; destructive repair/reset actions are marked High and are excluded from Recommended.","PikaTweaks",MessageBoxButton.YesNo,MessageBoxImage.Warning);
+        var answer=MessageBox.Show("Apply all 75 source-derived V10.2 tweaks? Diagnostic-only items are included only where they change system state; destructive repair/reset actions are marked High and are excluded from Recommended.","PIKATWEAKS2",MessageBoxButton.YesNo,MessageBoxImage.Warning);
         if(answer==MessageBoxResult.Yes) await ApplyAsync(TweakCatalog.All);
     }
     async Task ApplyAsync(IEnumerable<Tweak> tweaks)
@@ -388,26 +388,26 @@ public partial class MainWindow : Window
             }
             catch(Exception ex){ LogList.Items.Insert(0,$"✗ {t.Name}: {ex.Message}"); log.Write($"ERROR {t.Id} {ex}"); }
         }
-        MessageBox.Show("Finished. Check the Activity panel for individual results.","PikaTweaks",MessageBoxButton.OK,MessageBoxImage.Information);
+        MessageBox.Show("Finished. Check the Activity panel for individual results.","PIKATWEAKS2",MessageBoxButton.OK,MessageBoxImage.Information);
     }
 }
 ''')
 
 w('README.md', '''
-# PikaTweaks
+# PIKATWEAKS2
 
-A GitHub-ready Windows tweaking application inspired by the layout of modern PC optimizer apps, built around the real **PikaTweaks V10.2** tweak library.
+A GitHub-ready Windows tweaking application inspired by the layout of modern PC optimizer apps, built around the real **PIKATWEAKS2 V10.2** tweak library.
 
 ## What is included
 
-- 75 source-derived V10.2 library actions from the supplied `PikaTweaks-V10.2.bat`.
+- 75 source-derived V10.2 library actions from the supplied `PIKATWEAKS2-V10.2.bat`.
 - Native WPF desktop UI.
 - Purple/dark dashboard layout.
 - Search and categories.
 - Apply Selected / Apply Recommended / Apply All Tweaks.
 - Administrator manifest for system-wide changes.
 - Hidden command execution through temporary `.cmd` files, so multi-command batch syntax is preserved without opening a visible Command Prompt.
-- Activity logging under `%ProgramData%\\PikaTweaks\\pikatweaks.log`.
+- Activity logging under `%ProgramData%\\PIKATWEAKS2\\pikatweaks.log`.
 
 ## Important behavior
 
@@ -427,12 +427,12 @@ dotnet build -c Release -p:Platform=x64
 Publish a standalone EXE:
 
 ```powershell
-dotnet publish src/PikaTweaks/PikaTweaks.csproj -c Release -r win-x64 --self-contained true -p:PublishSingleFile=true -p:IncludeNativeLibrariesForSelfExtract=true
+dotnet publish src/PIKATWEAKS2/PIKATWEAKS2.csproj -c Release -r win-x64 --self-contained true -p:PublishSingleFile=true -p:IncludeNativeLibrariesForSelfExtract=true
 ```
 
 Output is under:
 
-`src/PikaTweaks/bin/Release/net8.0-windows/win-x64/publish/`
+`src/PIKATWEAKS2/bin/Release/net8.0-windows/win-x64/publish/`
 
 ## GitHub Actions
 
@@ -446,7 +446,7 @@ MIT — see `LICENSE`.
 w('LICENSE', '''
 MIT License
 
-Copyright (c) 2026 PikaTweaks contributors
+Copyright (c) 2026 PIKATWEAKS2 contributors
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -479,7 +479,7 @@ publish/
 ''')
 
 w('.github/workflows/build.yml', '''
-name: Build PikaTweaks
+name: Build PIKATWEAKS2
 on:
   push:
     branches: [ "main" ]
@@ -498,20 +498,20 @@ jobs:
       - name: Build
         run: dotnet build -c Release -p:Platform=x64 --no-restore
       - name: Publish single-file EXE
-        run: dotnet publish src/PikaTweaks/PikaTweaks.csproj -c Release -r win-x64 --self-contained true -p:PublishSingleFile=true -p:IncludeNativeLibrariesForSelfExtract=true --no-restore
+        run: dotnet publish src/PIKATWEAKS2/PIKATWEAKS2.csproj -c Release -r win-x64 --self-contained true -p:PublishSingleFile=true -p:IncludeNativeLibrariesForSelfExtract=true --no-restore
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
-          name: PikaTweaks-win-x64
-          path: src/PikaTweaks/bin/Release/net8.0-windows/win-x64/publish/
+          name: PIKATWEAKS2-win-x64
+          path: src/PIKATWEAKS2/bin/Release/net8.0-windows/win-x64/publish/
 ''')
 
-w('src/PikaTweaks/Properties/AssemblyInfo.cs', '''
+w('src/PIKATWEAKS2/Properties/AssemblyInfo.cs', '''
 using System.Reflection;
-[assembly: AssemblyTitle("PikaTweaks")]
-[assembly: AssemblyDescription("Windows optimizer based on the PikaTweaks V10.2 library")]
-[assembly: AssemblyCompany("PikaTweaks")]
-[assembly: AssemblyProduct("PikaTweaks")]
+[assembly: AssemblyTitle("PIKATWEAKS2")]
+[assembly: AssemblyDescription("Windows optimizer based on the PIKATWEAKS2 V10.2 library")]
+[assembly: AssemblyCompany("PIKATWEAKS2")]
+[assembly: AssemblyProduct("PIKATWEAKS2")]
 [assembly: AssemblyVersion("11.0.0.0")]
 [assembly: AssemblyFileVersion("11.0.0.0")]
 ''')
