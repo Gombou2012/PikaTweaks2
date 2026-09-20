@@ -1,0 +1,50 @@
+<Window x:Class="PIKATWEAKS2.MainWindow" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" Title="PIKATWEAKS2" Width="1280" Height="800" MinWidth="1000" MinHeight="650" Background="{StaticResource Bg}" Foreground="{StaticResource Text}" WindowStartupLocation="CenterScreen">
+<Grid>
+  <Grid.ColumnDefinitions><ColumnDefinition Width="220"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions>
+  <Border Grid.Column="0" Background="#120E18" BorderBrush="{StaticResource Border}" BorderThickness="0,0,1,0">
+    <DockPanel Margin="18">
+      <StackPanel DockPanel.Dock="Top">
+        <TextBlock Text="PIKATWEAKS" FontSize="22" FontWeight="Bold" Foreground="{StaticResource Purple}"/>
+        <TextBlock Text="WINDOWS OPTIMIZER" FontSize="10" Foreground="{StaticResource Muted}" Margin="1,0,0,24"/>
+        <Button Content="⌂  Dashboard" Tag="All" Click="Category_Click" HorizontalContentAlignment="Left"/>
+        <Button Content="◈  V10.2 Library" Tag="V10.2" Click="Category_Click" HorizontalContentAlignment="Left"/>
+        <Button Content="🎮  Gaming" Tag="Gaming / Input" Click="Category_Click" HorizontalContentAlignment="Left"/>
+        <Button Content="⚡  Performance" Tag="Performance" Click="Category_Click" HorizontalContentAlignment="Left"/>
+        <Button Content="🌐  Network" Tag="Network / Maintenance" Click="Category_Click" HorizontalContentAlignment="Left"/>
+        <Button Content="🧹  Cleanup" Tag="Cleanup" Click="Category_Click" HorizontalContentAlignment="Left"/>
+        <Button Content="🔒  Privacy" Tag="Privacy" Click="Category_Click" HorizontalContentAlignment="Left"/>
+        <Button Content="⚙  Services" Tag="Services / Storage / Extras" Click="Category_Click" HorizontalContentAlignment="Left"/>
+      </StackPanel>
+      <StackPanel DockPanel.Dock="Bottom">
+        <TextBlock Text="V11 foundation • V10.2 source" Foreground="{StaticResource Muted}" FontSize="11" Margin="2,0,0,12"/>
+      </StackPanel>
+    </DockPanel>
+  </Border>
+  <Grid Grid.Column="1" Margin="28">
+    <Grid.RowDefinitions><RowDefinition Height="Auto"/><RowDefinition Height="Auto"/><RowDefinition Height="*"/><RowDefinition Height="170"/></Grid.RowDefinitions>
+    <Grid Grid.Row="0" Margin="0,0,0,20">
+      <Grid.ColumnDefinitions><ColumnDefinition/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions>
+      <StackPanel><TextBlock Text="Optimize your PC" FontSize="30" FontWeight="SemiBold"/><TextBlock Text="Real Windows settings • reversible workflow • transparent activity log" Foreground="{StaticResource Muted}" Margin="0,4,0,0"/></StackPanel>
+      <StackPanel Grid.Column="1" Orientation="Horizontal"><Button Content="APPLY RECOMMENDED" Click="ApplyRecommended_Click" Background="{StaticResource Purple2}" FontWeight="Bold"/><Button Content="APPLY ALL TWEAKS" Click="ApplyAll_Click" Background="#8B2CF5" FontWeight="Bold"/></StackPanel>
+    </Grid>
+    <Grid Grid.Row="1" Margin="0,0,0,12">
+      <Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions>
+      <TextBox x:Name="SearchBox" TextChanged="SearchBox_TextChanged" Height="42" VerticalContentAlignment="Center"/>
+      <StackPanel Grid.Column="1" Orientation="Horizontal" Margin="12,0,0,0"><TextBlock x:Name="CountText" VerticalAlignment="Center" Foreground="{StaticResource Muted}" Margin="0,0,10,0"/><Button Content="APPLY SELECTED" Click="ApplySelected_Click"/></StackPanel>
+    </Grid>
+    <Border Grid.Row="2" Background="{StaticResource Panel}" CornerRadius="12" Padding="10" BorderBrush="{StaticResource Border}" BorderThickness="1">
+      <ListBox x:Name="TweakList" SelectionMode="Extended">
+        <ListBox.ItemTemplate><DataTemplate><Border Margin="4" Padding="14" Background="#1A1422" CornerRadius="9" BorderBrush="#2A2232" BorderThickness="1"><Grid>
+          <Grid.ColumnDefinitions><ColumnDefinition Width="Auto"/><ColumnDefinition/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions>
+          <CheckBox IsChecked="{Binding IsSelected, Mode=TwoWay}" VerticalAlignment="Top" Margin="0,2,12,0"/>
+          <StackPanel Grid.Column="1"><TextBlock Text="{Binding Name}" FontSize="14" FontWeight="SemiBold"/><TextBlock Text="{Binding Description}" Foreground="{StaticResource Muted}" TextWrapping="Wrap" Margin="0,4,0,0"/><TextBlock Text="{Binding Category}" Foreground="{StaticResource Purple}" FontSize="10" Margin="0,7,0,0"/></StackPanel>
+          <Border Grid.Column="2" Padding="8,4" CornerRadius="6" Background="#251C30"><TextBlock Text="{Binding Risk}" Foreground="{StaticResource Muted}" FontSize="10"/></Border>
+        </Grid></Border></DataTemplate></ListBox.ItemTemplate>
+      </ListBox>
+    </Border>
+    <Border Grid.Row="3" Margin="0,14,0,0" Background="#120E18" BorderBrush="{StaticResource Border}" BorderThickness="1" CornerRadius="10" Padding="12">
+      <DockPanel><TextBlock DockPanel.Dock="Top" Text="ACTIVITY" Foreground="{StaticResource Purple}" FontWeight="Bold" Margin="0,0,0,7"/><ListBox x:Name="LogList"/></DockPanel>
+    </Border>
+  </Grid>
+</Grid>
+</Window>
