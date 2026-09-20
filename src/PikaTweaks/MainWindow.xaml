@@ -4,7 +4,7 @@
   <Border Grid.Column="0" Background="#120E18" BorderBrush="{StaticResource Border}" BorderThickness="0,0,1,0">
     <DockPanel Margin="18">
       <StackPanel DockPanel.Dock="Top">
-        <TextBlock Text="PIKATWEAKS" FontSize="22" FontWeight="Bold" Foreground="{StaticResource Purple}"/>
+        <TextBlock Text="PikaTweaks" FontSize="22" FontWeight="Bold" Foreground="{StaticResource Purple}"/>
         <TextBlock Text="WINDOWS OPTIMIZER" FontSize="10" Foreground="{StaticResource Muted}" Margin="1,0,0,24"/>
         <Button Content="⌂  Dashboard" Tag="All" Click="Category_Click" HorizontalContentAlignment="Left"/>
         <Button Content="◈  V10.2 Library" Tag="V10.2" Click="Category_Click" HorizontalContentAlignment="Left"/>

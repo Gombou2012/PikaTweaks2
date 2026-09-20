@@ -17,9 +17,7 @@ public sealed class BackupService
                 var (hive, sub) = root.StartsWith("HKCU", StringComparison.OrdinalIgnoreCase) ? ("HKCU", root[5..]) : ("HKLM", root[5..]);
                 using var key = (hive == "HKCU" ? Registry.CurrentUser : Registry.LocalMachine).OpenSubKey(sub);
                 if (key == null) continue;
-                File.WriteAllText(file, "; PikaTweaks backup
-; Registry path: " + root + "
-");
+                File.WriteAllText(file, "; PikaTweaks backup\r\n; Registry path: " + root + "\r\n");
             }
             catch { }
         }

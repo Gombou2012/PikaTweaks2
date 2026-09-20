@@ -1,36 +1,47 @@
 # PIKATWEAKS2
 
-A native Windows WPF optimizer UI inspired by modern PC-tweaking apps, built around the 75 source-derived PikaTweaks V10.2 library actions.
+A GitHub-ready Windows tweaking application inspired by the layout of modern PC optimizer apps, built around the real **PIKATWEAKS2 V10.2** tweak library.
 
-## What it does
+## What is included
 
-- Purple/dark dashboard UI with sidebar navigation.
-- 75 real Windows actions derived from `PikaTweaks-V10.2.bat`.
-- Search and category filtering.
-- Recommended one-click optimization pack.
-- Apply selected and Apply All Non-Maintenance operations.
-- Automatic registry backup before a tweak batch.
-- Manual backup and latest-backup restore.
-- Hidden command execution; no visible Command Prompt window.
-- Administrator UAC via application manifest.
-- Activity log and restart indicators.
-- Diagnostics and repair actions are separated from normal optimization.
+- 75 source-derived V10.2 library actions from the supplied `PIKATWEAKS2-V10.2.bat`.
+- Native WPF desktop UI.
+- Purple/dark dashboard layout.
+- Search and categories.
+- Apply Selected / Apply Recommended / Apply All Tweaks.
+- Administrator manifest for system-wide changes.
+- Hidden command execution through temporary `.cmd` files, so multi-command batch syntax is preserved without opening a visible Command Prompt.
+- Activity logging under `%ProgramData%\PIKATWEAKS2\pikatweaks.log`.
 
-## Build
+## Important behavior
 
-Install Visual Studio 2022 with **.NET desktop development** or the .NET 8 SDK on Windows.
+This project intentionally keeps the original source commands rather than claiming unsupported FPS gains. Some changes require a reboot, sign-out, or application restart before Windows reflects them.
+
+`Apply All Tweaks` runs all 75 source-derived actions. `Apply Recommended` is a safer subset and excludes the high-impact repair/reset/power actions.
+
+## Build on Windows
+
+Install the .NET 8 SDK, then from the repository root:
 
 ```powershell
 dotnet restore
-dotnet publish PIKATWEAKS2.sln -c Release -r win-x64 --self-contained true -p:PublishSingleFile=true -o publish
+dotnet build -c Release -p:Platform=x64
 ```
 
-The executable is `publish/PIKATWEAKS2.exe`.
+Publish a standalone EXE:
+
+```powershell
+dotnet publish src/PIKATWEAKS2/PIKATWEAKS2.csproj -c Release -r win-x64 --self-contained true -p:PublishSingleFile=true -p:IncludeNativeLibrariesForSelfExtract=true
+```
+
+Output is under:
+
+`src/PIKATWEAKS2/bin/Release/net8.0-windows/win-x64/publish/`
 
 ## GitHub Actions
 
-The included workflow builds the self-contained Windows executable and uploads it as an artifact.
+Push to GitHub and the workflow in `.github/workflows/build.yml` will build and publish a Windows x64 artifact.
 
-## Notes
+## License
 
-This application changes Windows registry, power, networking, services, privacy and maintenance settings. Create a backup before changing settings and review each action. Hardware/Windows-version behavior can differ, and FPS/performance gains are not guaranteed.
+MIT — see `LICENSE`.

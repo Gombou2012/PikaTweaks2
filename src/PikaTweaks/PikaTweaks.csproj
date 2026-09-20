@@ -5,9 +5,10 @@
     <UseWPF>true</UseWPF>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
-    <AssemblyName>PikaTweaks</AssemblyName>
+    <AssemblyName>PIKATWEAKS2</AssemblyName>
     <RootNamespace>PikaTweaks</RootNamespace>
     <ApplicationManifest>app.manifest</ApplicationManifest>
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <Platforms>x64</Platforms>
   </PropertyGroup>
 </Project>
