@@ -1,0 +1,29 @@
+name: Build PIKATWEAKS2
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.x'
+
+      - name: Build PIKATWEAKS2
+        run: dotnet publish PikaTweaks.sln -c Release --self-contained true -r win-x64 -p:PublishSingleFile=true -p:IncludeNativeLibrariesForSelfExtract=true -o publish
+
+      - name: Upload PIKATWEAKS2
+        uses: actions/upload-artifact@v4
+        with:
+          name: PIKATWEAKS2-Windows
+          path: publish/
