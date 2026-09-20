@@ -1,26 +1,22 @@
-using Microsoft.Win32;
+using System.IO;
 namespace PIKATWEAKS2.Services;
 public sealed class BackupService
 {
-    public string Root { get; } = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData), "PIKATWEAKS2", "Backups");
-    public BackupService() => Directory.CreateDirectory(Root);
-    public string CreateSessionBackup(IEnumerable<string> registryRoots)
+    public string Folder { get; } = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData), "PIKATWEAKS2", "Backups");
+    public async Task<string> CreateAsync(CommandRunner runner)
     {
-        var folder = Path.Combine(Root, DateTime.Now.ToString("yyyyMMdd-HHmmss"));
-        Directory.CreateDirectory(folder);
-        foreach (var root in registryRoots.Distinct())
-        {
-            try
-            {
-                var safe = string.Concat(root.Select(c => char.IsLetterOrDigit(c) ? c : '_'));
-                var file = Path.Combine(folder, safe + ".reg");
-                var (hive, sub) = root.StartsWith("HKCU", StringComparison.OrdinalIgnoreCase) ? ("HKCU", root[5..]) : ("HKLM", root[5..]);
-                using var key = (hive == "HKCU" ? Registry.CurrentUser : Registry.LocalMachine).OpenSubKey(sub);
-                if (key == null) continue;
-                File.WriteAllText(file, "; PIKATWEAKS2 backup\r\n; Registry path: " + root + "\r\n");
-            }
-            catch { }
-        }
-        return folder;
+        Directory.CreateDirectory(Folder);
+        var dir = Path.Combine(Folder, DateTime.Now.ToString("yyyyMMdd-HHmmss")); Directory.CreateDirectory(dir);
+        var commands = new[] {
+            $"reg export \"HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\Themes\\Personalize\" \"{Path.Combine(dir,"Personalize.reg")}\" /y",
+            $"reg export \"HKCU\\Control Panel\\Desktop\" \"{Path.Combine(dir,"Desktop.reg")}\" /y",
+            $"reg export \"HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Advanced\" \"{Path.Combine(dir,"ExplorerAdvanced.reg")}\" /y",
+            $"reg export \"HKCU\\Software\\Microsoft\\GameBar\" \"{Path.Combine(dir,"GameBar.reg")}\" /y",
+            $"reg export \"HKCU\\System\\GameConfigStore\" \"{Path.Combine(dir,"GameConfigStore.reg")}\" /y",
+            $"reg export \"HKLM\\SYSTEM\\CurrentControlSet\\Control\\GraphicsDrivers\" \"{Path.Combine(dir,"GraphicsDrivers.reg")}\" /y"
+        };
+        foreach(var c in commands) await runner.RunAsync(c);
+        await File.WriteAllTextAsync(Path.Combine(dir,"created.txt"), DateTime.Now.ToString("O"));
+        return dir;
     }
 }
